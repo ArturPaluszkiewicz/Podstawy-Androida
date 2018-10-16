@@ -1,7 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class Zad9 {
+public class Zadanie9 {
 
 
     public static boolean checkIP(String ip) {
