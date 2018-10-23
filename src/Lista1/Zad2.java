@@ -8,18 +8,21 @@ import java.util.Scanner;
 public class Zad2 {
 
     int firstValue, firstPotency, secondValue, secondPotency, thirdValue, index;
+    int leftBoundary, rightBoundary;
+    int iterationAmount = 1;
+    double accuracy = 1.00;
+    double middle;
+    Scanner scanIn = new Scanner(System.in);
+    int y1, y2;
 
     public void read() {
         if (this.index == 0) {
             System.out.println("Zadanie 2.");
         }
 
-        Scanner scanIn = new Scanner(System.in);
         showFinalResult();
         System.out.println("Wpisywana wartość oznaczona gwiazdką (*): " + showEditValue());
-        addValue(scanIn.nextInt());
-
-        scanIn.close();
+        addValue();
     }
 
     private void showFinalResult() {
@@ -61,7 +64,8 @@ public class Zad2 {
         return valueToReturn;
     }
 
-    private void addValue(int value) {
+    private void addValue() {
+        int value = scanIn.nextInt();
         if (this.index < 5) {
             switch (this.index) {
                 case 0:
@@ -82,7 +86,7 @@ public class Zad2 {
                     break;
                 case 4:
                     this.thirdValue = value;
-                    count();
+                    readBoundaries();
                     break;
                 default:
                     System.err.println("Incorrect index!");
@@ -96,8 +100,45 @@ public class Zad2 {
         read();
     }
 
-    private void count() {
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-        generateCurrentSchemat();
+    private void readBoundaries() {
+        System.out.println("Podaj lewą granicę przedziału funkcji: ");
+        this.leftBoundary = scanIn.nextInt();
+
+        System.out.println("Podaj prawą granicę przedziału funkcji: ");
+        this.rightBoundary = scanIn.nextInt();
+
+        if (this.leftBoundary >= this.rightBoundary) {
+            System.out.println("Lewa granica przedziału musi być mniejsza od prawej, wprowadź dane jeszcze raz:");
+            readBoundaries();
+        } else {
+            readAccuracyAndIteration();
+        }
+    }
+
+    private void readAccuracyAndIteration() {
+        System.out.println("Podaj liczbę iteracji: ");
+        this.iterationAmount = scanIn.nextInt();
+
+        System.out.println("Podaj dokładność (dwa miejsca po przecinku): ");
+        this.accuracy = scanIn.nextDouble();
+
+        scanIn.close();
+
+        startCounting();
+    }
+
+    private void startCounting() {
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        this.y1 = this.firstValue * (int) Math.pow(this.leftBoundary, this.firstPotency)
+                + this.secondValue * (int) Math.pow(this.leftBoundary, this.secondPotency)
+                + this.thirdValue;
+        this.y2 = this.firstValue * (int) Math.pow(this.rightBoundary, this.firstPotency)
+                + this.secondValue * (int) Math.pow(this.rightBoundary, this.secondPotency)
+                + this.thirdValue;
+        this.middle = (this.y1 + this.y2) / 2.00;
+        
+        System.out.println("y1 = " + this.y1);
+        System.out.println("y2 = " + this.y2);
+        System.out.println("middle = " + this.middle);
     }
 }
