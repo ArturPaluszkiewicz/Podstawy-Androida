@@ -1,4 +1,4 @@
-public class Zad8 {
+public class Zadanie8 {
 
     public void search(String substring, String string){
 
