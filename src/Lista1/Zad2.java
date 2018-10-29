@@ -4,22 +4,21 @@ import java.util.Scanner;
 
 //2. Należy napisać program do obliczania pierwiastka zadanego równania nieliniowego na zadanym przedziale
 //metodą bisekcji z zadaną dokładnością i liczbą iteracji;
-//https://chem.pg.edu.pl/documents/175260/14212622/smo_sem_014.pdf
 public class Zad2 {
 
     int firstValue, firstPotency, secondValue, secondPotency, thirdValue, index;
     int leftBoundary, rightBoundary;
     int iterationAmount = 1;
-    double accuracy = 1.00;
-    double middle;
-    Scanner scanIn = new Scanner(System.in);
+    int currentIteration = 0;
     int y1, y2;
+    double accuracy = 1.00;
+    double currentValue;
+    Scanner scanIn = new Scanner(System.in);
 
     public void read() {
         if (this.index == 0) {
             System.out.println("Zadanie 2.");
         }
-
         showFinalResult();
         System.out.println("Wpisywana wartość oznaczona gwiazdką (*): " + showEditValue());
         addValue();
@@ -37,6 +36,7 @@ public class Zad2 {
         secondPotency = checkValue(this.secondPotency);
         thirdValue = checkValue(this.thirdValue);
 
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
         System.out.println("Aktualne wartości: " + firstValue + "x^" + firstPotency + " + " + secondValue + "x^" + secondPotency + " + " + thirdValue);
     }
 
@@ -135,10 +135,66 @@ public class Zad2 {
         this.y2 = this.firstValue * (int) Math.pow(this.rightBoundary, this.firstPotency)
                 + this.secondValue * (int) Math.pow(this.rightBoundary, this.secondPotency)
                 + this.thirdValue;
-        this.middle = (this.y1 + this.y2) / 2.00;
-        
+
         System.out.println("y1 = " + this.y1);
         System.out.println("y2 = " + this.y2);
-        System.out.println("middle = " + this.middle);
+
+        this.nextCountingIteration(this.y1, this.y2, this.leftBoundary, this.rightBoundary);
+    }
+
+    private void nextCountingIteration(double value1, double value2, double leftBoundary, double rightBoundary) {
+        double z1, z2, middle;
+
+        if (this.currentIteration < this.iterationAmount) {
+            if (rightBoundary - leftBoundary <= this.accuracy) {
+                System.out.println("Osiągnięto zamierzaną dokładność, aktualna wartość: " + this.currentValue);
+            } else {
+                this.currentIteration++;
+                System.out.println("\nNumer iteracji: " + this.currentIteration);
+                if (value1 * value2 > 0) {
+                    System.out.println("Nie istnieją miejsca zerowe funkcji");
+                    System.out.println(value1 * value2);
+                } else {
+                    middle = (leftBoundary + rightBoundary) / 2.00;
+                    z1 = this.firstValue * (int) Math.pow(leftBoundary, this.firstPotency)
+                            + this.secondValue * (int) Math.pow(leftBoundary, this.secondPotency)
+                            + this.thirdValue;
+                    z2 = this.firstValue * (int) Math.pow(middle, this.firstPotency)
+                            + this.secondValue * (int) Math.pow(middle, this.secondPotency)
+                            + this.thirdValue;
+                    System.out.println("z1 = " + z1);
+                    System.out.println("z2 = " + z2);
+                    if (z1 * z2 <= 0 && (z1 != 0 || z2 != 0)) {
+                        this.currentValue = z1 * z2;
+                        this.nextCountingIteration(z1, z2, leftBoundary, middle);
+                    } else {
+                        z1 = this.firstValue * (int) Math.pow(middle, this.firstPotency)
+                                + this.secondValue * (int) Math.pow(middle, this.secondPotency)
+                                + this.thirdValue;
+                        z2 = this.firstValue * (int) Math.pow(rightBoundary, this.firstPotency)
+                                + this.secondValue * (int) Math.pow(rightBoundary, this.secondPotency)
+                                + this.thirdValue;
+                        System.out.println("z1.2 = " + z1);
+                        System.out.println("z2.2 = " + z2);
+                        if (z1 * z2 <= 0 && (z1 != 0 || z2 != 0)) {
+                            this.currentValue = z1 * z2;
+                            this.nextCountingIteration(z1, z2, middle, rightBoundary);
+                        } else {
+                            if (this.currentValue >= 0) {
+                                System.out.println("Brak miejsc zerowych w funkcji " + this.currentValue);
+                            } else {
+                                System.out.println("Wyliczone miejsce zerowe: " + this.currentValue);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if (this.currentValue >= 0) {
+                System.out.println("Brak miejsc zerowych w funkcji " + this.currentValue);
+            } else {
+                System.out.println("Wyliczone miejsce zerowe: " + this.currentValue);
+            }
+        }
     }
 }
